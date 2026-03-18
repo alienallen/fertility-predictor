@@ -1,0 +1,13 @@
+{
+  "name": "fertility-predictor",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:web": "uni",
+    "dev:mp-weixin": "uni -m mp-weixin",
+    "build:web": "uni build",
+    "server": "node backend/src/index.js"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

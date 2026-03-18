@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>备孕日历 - 温暖有机风</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-cream: #FDF8F3;
+      --color-sage: #9CAF88;
+      --color-sage-light: #C5D4B8;
+      --color-sage-dark: #7A9163;
+      --color-terracotta: #D4A574;
+      --color-terracotta-light: #E8C9A8;
+      --color-blush: #E8B4B8;
+      --color-warm-gray: #8B8178;
+      --color-text: #4A4541;
+      --color-text-light: #7A7470;
+      --color-white: #FFFFFF;
+      --color-period: #E8B4B8;
+      --color-fertile: #9CAF88;
+      --color-ovulation: #D4A574;
+      --color-safe: #C5D4B8;
+      --font-display: 'Noto Serif SC', Georgia, serif;
+      --font-body: 'Quicksand', -apple-system, sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-full: 9999px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-body);
+      background: var(--color-cream);
+      color: var(--color-text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    .bg-texture {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      opacity: 0.4;
+      background-image: 
+        radial-gradient(ellipse at 20% 30%, rgba(157, 175, 136, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 70%, rgba(232, 180, 184, 0.15) 0%, transparent 50%);
+      z-index: -1;
+    }
+    .app {
+      max-width: 420px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: linear-gradient(180deg, var(--color-cream) 0%, #F5EDE6 100%);
+      position: relative;
+    }
+    .header {
+      padding: 16px 20px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header h1 {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+    .icon-btn {
+      width: 40px; height: 40px;
+      border-radius: var(--radius-full);
+      border: none;
+      background: var(--color-white);
+      box-shadow: 0 2px 8px rgba(74, 69, 65, 0.08);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .icon-btn svg { width: 20px; height: 20px; color: var(--color-text); }
+    .today-card {
+      margin: 0 16px 16px;
+      padding: 20px;
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 4px 20px rgba(74, 69, 65, 0.06);
+      position: relative;
+      overflow: hidden;
+    }
+    .today-card::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 120px; height: 120px;
+      background: radial-gradient(circle, rgba(157, 175, 136, 0.2) 0%, transparent 70%);
+      border-radius: 50%;
+      transform: translate(30%, -30%);
+    }
+    .today-status { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
+    .status-ring {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-fertile) 0%, var(--color-sage-dark) 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-white);
+      position: relative;
+    }
+    .status-ring::after {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border-radius: 50%;
+      background: var(--color-white);
+    }
+    .status-ring span { position: relative; z-index: 1; font-size: 18px; font-weight: 600; }
+    .status-ring small { position: relative; z-index: 1; font-size: 10px; opacity: 0.9; }
+    .status-text h2 { font-family: var(--font-display); font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+    .status-text p { font-size: 14px; color: var(--color-text-light); }
+    .fertile-level { display: flex; gap: 6px; margin-top: 12px; }
+    .fertile-dot {
+      width: 32px; height: 6px;
+      border-radius: var(--radius-full);
+      background: #E5E0DC;
+      transition: all 0.3s ease;
+    }
+    .fertile-dot.active {
+      background: linear-gradient(90deg, var(--color-sage) 0%, var(--color-terracotta) 100%);
+    }
+    .fertile-dot.active.high {
+      background: linear-gradient(90deg, var(--color-terracotta) 0%, var(--color-blush) 100%);
+    }
+    .calendar {
+      margin: 0 16px;
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      box-shadow: 0 4px 20px rgba(74, 69, 65, 0.06);
+    }
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .calendar-header h3 { font-family: var(--font-display); font-size: 18px; font-weight: 600; }
+    .calendar-nav { display: flex; gap: 8px; }
+    .nav-btn {
+      width: 32px; height: 32px;
+      border-radius: var(--radius-full);
+      border: none;
+      background: var(--color-cream);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-btn svg { width: 16px; height: 16px; color: var(--color-text); }
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+    .weekday { text-align: center; font-size: 12px; font-weight: 600; color: var(--color-text-light); padding: 8px 0; }
+    .calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+    .calendar-day {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      position: relative;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .calendar-day:hover { background: var(--color-cream); }
+    .calendar-day.today { background: var(--color-sage); color: var(--color-white); font-weight: 600; }
+    .calendar-day.other-month { color: #CCC; }
+    .calendar-day .marker { position: absolute; bottom: 4px; width: 6px; height: 6px; border-radius: 50%; }
+    .marker.period { background: var(--color-period); }
+    .marker.fertile { background: var(--color-fertile); }
+    .marker.ovulation { background: var(--color-ovulation); }
+    .marker.fertile-high { width: 8px; height: 8px; background: var(--color-terracotta); }
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid #F0EBE6;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--color-text-light); }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .quick-add { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column; gap: 12px; z-index: 100; }
+    .fab {
+      width: 56px; height: 56px;
+      border-radius: var(--radius-full);
+      border: none;
+      background: linear-gradient(135deg, var(--color-terracotta) 0%, var(--color-terracotta-light) 100%);
+      box-shadow: 0 4px 16px rgba(212, 165, 116, 0.4);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .fab svg { width: 24px; height: 24px; color: var(--color-white); }
+    .fab-menu {
+      display: flex; flex-direction: column; gap: 8px;
+      opacity: 0; transform: translateY(10px);
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+    .fab.open .fab-menu { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .fab-mini {
+      width: 44px; height: 44px;
+      border-radius: var(--radius-full);
+      border: none;
+      background: var(--color-white);
+      box-shadow: 0 2px 12px rgba(74, 69, 65, 0.15);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .fab-mini svg { width: 20px; height: 20px; color: var(--color-terracotta); }
+    .tab-bar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: var(--color-white);
+      display: flex; justify-content: space-around;
+      padding: 12px 0 24px;
+      box-shadow: 0 -2px 20px rgba(74, 69, 65, 0.05);
+    }
+    .tab-item {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      padding: 8px 16px; border: none; background: none; cursor: pointer;
+    }
+    .tab-item.active { color: var(--color-sage-dark); }
+    .tab-item svg { width: 24px; height: 24px; }
+    .tab-item span { font-size: 11px; font-weight: 500; }
+    .spacer { height: 100px; }
+  </style>
+</head>
+<body>
+  <div class="bg-texture"></div>
+  <div class="app">
+    <header class="header">
+      <h1>备孕日历</h1>
+      <button class="icon-btn">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      </button>
+    </header>
+    <div class="today-card">
+      <div class="today-status">
+        <div class="status-ring"><span>高</span><small>受孕率</small></div>
+        <div class="status-text"><h2>今天是易孕日</h2><p>排卵日前2天，受孕几率最高</p></div>
+      </div>
+      <div class="fertile-level">
+        <div class="fertile-dot"></div><div class="fertile-dot"></div>
+        <div class="fertile-dot active"></div>
+        <div class="fertile-dot active high"></div>
+        <div class="fertile-dot active high"></div>
+      </div>
+    </div>
+    <div class="calendar">
+      <div class="calendar-header">
+        <h3>2026年3月</h3>
+        <div class="calendar-nav">
+          <button class="nav-btn"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></button>
+          <button class="nav-btn"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>
+        </div>
+      </div>
+      <div class="calendar-weekdays">
+        <div class="weekday">日</div><div class="weekday">一</div><div class="weekday">二</div>
+        <div class="weekday">三</div><div class="weekday">四</div><div class="weekday">五</div><div class="weekday">六</div>
+      </div>
+      <div class="calendar-days">
+        <div class="calendar-day other-month">22</div><div class="calendar-day other-month">23</div><div class="calendar-day other-month">24</div>
+        <div class="calendar-day other-month">25</div><div class="calendar-day other-month">26</div><div class="calendar-day other-month">27</div><div class="calendar-day other-month">28</div>
+        <div class="calendar-day">1</div><div class="calendar-day">2</div><div class="calendar-day">3</div><div class="calendar-day">4</div><div class="calendar-day">5</div><div class="calendar-day">6</div><div class="calendar-day">7</div>
+        <div class="calendar-day">8</div><div class="calendar-day">9</div><div class="calendar-day">10</div><div class="calendar-day">11</div><div class="calendar-day">12</div><div class="calendar-day">13</div>
+        <div class="calendar-day">14<span class="marker period"></span></div><div class="calendar-day">15</div><div class="calendar-day">16</div><div class="calendar-day">17</div>
+        <div class="calendar-day">18<span class="marker fertile"></span></div><div class="calendar-day">19<span class="marker fertile"></span></div><div class="calendar-day">20<span class="marker fertile-high"></span></div>
+        <div class="calendar-day today">21<span class="marker ovulation"></span></div><div class="calendar-day">22<span class="marker fertile"></span></div><div class="calendar-day">23</div><div class="calendar-day">24</div><div class="calendar-day">25</div>
+        <div class="calendar-day">26</div><div class="calendar-day">27</div><div class="calendar-day">28</div><div class="calendar-day">29</div><div class="calendar-day">30</div><div class="calendar-day">31</div>
+        <div class="calendar-day other-month">1</div><div class="calendar-day other-month">2</div><div class="calendar-day other-month">3</div><div class="calendar-day other-month">4</div>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-dot" style="background:var(--color-period)"></span>经期</div>
+        <div class="legend-item"><span class="legend-dot" style="background:var(--color-fertile)"></span>易孕期</div>
+        <div class="legend-item"><span class="legend-dot" style="background:var(--color-ovulation)"></span>排卵日</div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <nav class="tab-bar">
+      <button class="tab-item active"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span>日历</span></button>
+      <button class="tab-item"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg><span>记录</span></button>
+      <button class="tab-item"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg><span>统计</span></button>
+      <button class="tab-item"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span>设置</span></button>
+    </nav>
+    <div class="quick-add">
+      <div class="fab" onclick="this.classList.toggle('open')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        <div class="fab-menu">
+          <button class="fab-mini"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></button>
+          <button class="fab-mini"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2z"/></svg></button>
+          <button class="fab-mini"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
