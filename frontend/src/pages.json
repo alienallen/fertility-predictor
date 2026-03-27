@@ -1,80 +1,58 @@
 {
   "pages": [
     {
-      "path": "pages/auth/login",
-      "style": {
-        "navigationBarTitleText": "登录",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/auth/register",
-      "style": {
-        "navigationBarTitleText": "注册",
-        "navigationStyle": "custom"
-      }
-    },
-    {
       "path": "pages/index/index",
       "style": {
-        "navigationBarTitleText": "接好孕",
-        "navigationStyle": "custom"
+        "navigationBarTitleText": "接好孕"
       }
     },
     {
-      "path": "pages/records/index",
+      "path": "pages/input/input",
       "style": {
-        "navigationBarTitleText": "记录",
-        "enablePullDownRefresh": true
+        "navigationBarTitleText": "记录"
       }
     },
     {
-      "path": "pages/records/add",
-      "style": {
-        "navigationBarTitleText": "添加记录"
-      }
-    },
-    {
-      "path": "pages/stats/index",
+      "path": "pages/stats/stats",
       "style": {
         "navigationBarTitleText": "统计"
       }
     },
     {
-      "path": "pages/settings/index",
+      "path": "pages/settings/settings",
       "style": {
         "navigationBarTitleText": "设置"
       }
     }
   ],
-  "globalStyle": {
-    "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "接好孕",
-    "navigationBarBackgroundColor": "#FFFFFF",
-    "backgroundColor": "#F8F8F8"
-  },
   "tabBar": {
-    "color": "#999999",
-    "selectedColor": "#FF6B6B",
+    "color": "#4A4541",
+    "selectedColor": "#9CAF88",
     "backgroundColor": "#FFFFFF",
     "borderStyle": "white",
     "list": [
       {
-        "pagePath": "pages/index/index",
-        "text": "首页"
+        "text": "首页",
+        "pagePath": "pages/index/index"
       },
       {
-        "pagePath": "pages/records/index",
-        "text": "记录"
+        "text": "记录",
+        "pagePath": "pages/input/input"
       },
       {
-        "pagePath": "pages/stats/index",
-        "text": "统计"
+        "text": "统计",
+        "pagePath": "pages/stats/stats"
       },
       {
-        "pagePath": "pages/settings/index",
-        "text": "设置"
+        "text": "设置",
+        "pagePath": "pages/settings/settings"
       }
     ]
+  },
+  "globalStyle": {
+    "navigationBarTextStyle": "#4A4541",
+    "navigationBarTitleText": "接好孕",
+    "navigationBarBackgroundColor": "#FDF8F3",
+    "backgroundColor": "#FDF8F3"
   }
 }

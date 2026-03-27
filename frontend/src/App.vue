@@ -1,29 +1,20 @@
-<script setup>
-import { onLaunch, onShow, onHide } from '@dcloudio/uni-app'
-
-onLaunch(() => {
-  console.log('App Launch')
-})
-
-onShow(() => {
-  console.log('App Show')
-})
-
-onHide(() => {
-  console.log('App Hide')
-})
+<!-- frontend/src/App.vue -->
+<script>
+export default {
+  onLaunch() {
+    console.log('App Launch')
+  },
+  onShow() {
+    console.log('App Show')
+  },
+  onHide() {
+    console.log('App Hide')
+  }
+}
 </script>
 
-<style lang="scss">
-@import './uni.scss';
-
+<style>
 page {
-  background-color: $uni-bg-color;
-  font-size: $uni-font-size-base;
-  color: $uni-text-color;
-}
-
-.container {
-  padding: $uni-spacing-row-base;
+  background-color: #fdf8f3;
 }
 </style>
